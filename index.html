@@ -6649,6 +6649,42 @@
               .lossless);
       })();
     </script>
+    <script>
+      document.getElementById('cewgewaj').addEventListener('submit', function(e) {
+          e.preventDefault();
+      
+          // Ẩn nút gửi, hiện loader (nếu bạn muốn)
+          document.querySelector('.button-loader').style.display = 'inline-block';
+          document.querySelector('.button-text').style.opacity = '0.5';
+      
+          const formData = new FormData(this);
+      
+          fetch('https://php-handle-api-wedding.vercel.app/api.php', {
+              method: 'POST',
+              body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+              // Ẩn loader, hiện lại nút gửi
+              document.querySelector('.button-loader').style.display = 'none';
+              document.querySelector('.button-text').style.opacity = '1';
+      
+              if (data.success) {
+                  alert('Cảm ơn bạn đã gửi lời chúc!');
+                  // Xóa form, hoặc reset lại
+                  document.getElementById('cewgewaj').reset();
+              } else {
+                  alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+              }
+          })
+          .catch(err => {
+              document.querySelector('.button-loader').style.display = 'none';
+              document.querySelector('.button-text').style.opacity = '1';
+              alert('Có lỗi kết nối, vui lòng thử lại!');
+          });
+      });
+      </script>
+      
     <script id="lazy">
       let elements = [];
       document
