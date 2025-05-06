@@ -6651,33 +6651,52 @@
       })();
     </script>
     <script>
-      document.getElementById('cewgewaj').addEventListener('submit', function(e) {
-          e.preventDefault();
-      
-          // Ẩn nút gửi, hiện loader (nếu bạn muốn)
-          document.querySelector('.button-loader').style.display = 'inline-block';
-          document.querySelector('.button-text').style.opacity = '0.5';
-      
-          const formData = new FormData(this);
-      
-          fetch('https://chaluichutu.com/wedding/api.php', {
-              method: 'POST',
-              body: formData
-          })
-          .then(res => res.json())
-          .then(data => {
-              // Ẩn loader, hiện lại nút gửi
-              document.querySelector('.button-loader').style.display = 'none';
-              document.querySelector('.button-text').style.opacity = '1';
-      
-              if (data.success) {
-                  alert('Cảm ơn bạn đã gửi lời chúc!');
-                  // Xóa form, hoặc reset lại
-                  document.getElementById('cewgewaj').reset();
-              } 
-          })
-          
-      });
+     document.getElementById('cewgewaj').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Lấy dữ liệu từ form
+    const fullName = this.querySelector('[name="full_name"]').value.trim();
+    const textInput1 = this.querySelector('[name="text_input_1"]').value.trim();
+    const textInput2 = this.querySelector('[name="text_input_2"]').value.trim();
+
+    // Kiểm tra dữ liệu (ví dụ: họ tên bắt buộc)
+    if (!fullName) {
+        alert('Vui lòng nhập tên của bạn!');
+        this.querySelector('[name="full_name"]').focus();
+        return;
+    }
+    // Có thể kiểm tra thêm các trường khác nếu muốn
+
+    // Ẩn nút gửi, hiện loader (nếu bạn muốn)
+    document.querySelector('.button-loader').style.display = 'inline-block';
+    document.querySelector('.button-text').style.opacity = '0.5';
+
+    const formData = new FormData(this);
+
+    fetch('https://chaluichutu.com/wedding/api.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Ẩn loader, hiện lại nút gửi
+        document.querySelector('.button-loader').style.display = 'none';
+        document.querySelector('.button-text').style.opacity = '1';
+
+        if (data.success) {
+            alert('Cảm ơn bạn đã gửi lời chúc!');
+            this.reset();
+        } else if (data.message) {
+            alert(data.message); // Hiển thị lỗi từ server (ví dụ: gửi quá 5 phút)
+        }
+    })
+    .catch(() => {
+        document.querySelector('.button-loader').style.display = 'none';
+        document.querySelector('.button-text').style.opacity = '1';
+        alert('Có lỗi xảy ra, vui lòng thử lại!');
+    });
+});
+
       </script>
       
     <script id="lazy">
